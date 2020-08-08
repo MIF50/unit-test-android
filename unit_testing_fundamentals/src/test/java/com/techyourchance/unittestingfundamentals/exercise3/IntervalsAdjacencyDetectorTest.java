@@ -13,11 +13,10 @@ public class IntervalsAdjacencyDetectorTest {
     IntervalsAdjacencyDetector SUT;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         SUT = new IntervalsAdjacencyDetector();
     }
 
-    // interval1 is before interval2
     @Test
     public void isAdjacent_givenInterval1BeforeInternal2_returnFalse() {
         Interval interval1 = new Interval(-1,5);
@@ -27,7 +26,6 @@ public class IntervalsAdjacencyDetectorTest {
         assertThat(result, is(false));
     }
 
-    // interval1 is after interval2
     @Test
     public void isAdjacent_givenInterval1AfterInternal2_returnFalse() {
         Interval interval1 = new Interval(-1,5);
@@ -37,7 +35,6 @@ public class IntervalsAdjacencyDetectorTest {
         assertThat(result, is(false));
     }
 
-    // interval1 is contains  interval2
     @Test
     public void isAdjacent_givenInterval1ContainsInterval2_returnFalse() {
         Interval interval1 = new Interval(-1,5);
@@ -47,7 +44,6 @@ public class IntervalsAdjacencyDetectorTest {
         assertThat(result, is(false));
     }
 
-    // interval1 is contains with interval2
     @Test
     public void isAdjacent_givenInterval1ContainsWithInterval2_returnFalse() {
         Interval interval1 = new Interval(-1,5);
@@ -57,7 +53,6 @@ public class IntervalsAdjacencyDetectorTest {
         assertThat(result, is(false));
     }
 
-    // interval1 is overlap with interval2 onStart
     @Test
     public void isAdjacent_givenInterval1OverlapInterval2OnStart_returnFalse() {
         Interval interval1 = new Interval(-1,5);
@@ -68,7 +63,6 @@ public class IntervalsAdjacencyDetectorTest {
         assertThat(result, is(false));
     }
 
-    // interval1 is overlap with interval2 onEnd
     @Test
     public void isAdjacent_givenInterval1OverlapInterval2OnEnd_returnFalse() {
         Interval interval1 = new Interval(-1,5);
@@ -78,7 +72,15 @@ public class IntervalsAdjacencyDetectorTest {
         assertThat(result, is(false));
     }
 
-    // interval1 is after adjacent interval2
+    @Test
+    public void isAdjacent_givenInterval1TheSameInterval2_returnFalse() {
+        Interval interval1 = new Interval(-1,5);
+        Interval interval2 = new Interval(-1,5);
+
+        boolean result = SUT.isAdjacent(interval1, interval2);
+        assertThat(result, is(false));
+    }
+
     @Test
     public void isAdjacent_givenIntervalIsAfterAdjacentInterval2_returnTrue() {
         Interval interval1 = new Interval(-1,5);
@@ -88,7 +90,6 @@ public class IntervalsAdjacencyDetectorTest {
         assertThat(result, is(true));
     }
 
-    // interval1 is before and adjacent interval2
     @Test
     public void isAdjacent_givenIntervalIsBeforeAdjacentInterval2_returnTrue() {
         Interval interval1 = new Interval(-1,5);
@@ -96,15 +97,5 @@ public class IntervalsAdjacencyDetectorTest {
 
         boolean result = SUT.isAdjacent(interval1, interval2);
         assertThat(result, is(true));
-    }
-
-    // interval1 is the equal interval2
-    @Test
-    public void isAdjacent_givenInterval1TheSameInterval2_returnFalse() {
-        Interval interval1 = new Interval(-1,5);
-        Interval interval2 = new Interval(-1,5);
-
-        boolean result = SUT.isAdjacent(interval1, interval2);
-        assertThat(result, is(false));
     }
 }
