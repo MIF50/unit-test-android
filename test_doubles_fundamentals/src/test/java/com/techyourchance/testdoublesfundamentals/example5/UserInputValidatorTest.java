@@ -1,7 +1,5 @@
 package com.techyourchance.testdoublesfundamentals.example5;
 
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,25 +16,25 @@ public class UserInputValidatorTest {
     }
 
     @Test
-    public void isValidFullName_validFullName_trueReturned() throws Exception {
+    public void isValidFullName_validFullName_returnTrue() throws Exception {
         boolean result = SUT.isValidFullName("validFullName");
         assertThat(result, is(true));
     }
 
     @Test
-    public void isValidFullName_invalidFullName_falseReturned() throws Exception {
+    public void isValidFullName_invalidFullName_returnFalse() throws Exception {
         boolean result = SUT.isValidFullName("");
         assertThat(result, is(false));
     }
 
     @Test
-    public void isValidUsername_validUsername_trueReturned() throws Exception {
+    public void isValidUsername_validUsername_returnTrue() throws Exception {
         boolean result = SUT.isValidUsername("validUsername");
         assertThat(result, is(true));
     }
 
     @Test
-    public void isValidUsername_invalidUsername_falseReturned() throws Exception {
+    public void isValidUsername_invalidUsername_returnFalse() throws Exception {
         boolean result = SUT.isValidUsername("");
         assertThat(result, is(false));
     }

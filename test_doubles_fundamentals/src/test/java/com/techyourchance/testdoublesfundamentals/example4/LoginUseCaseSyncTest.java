@@ -16,15 +16,15 @@ import static org.junit.Assert.assertThat;
 
 public class LoginUseCaseSyncTest {
 
-    public static final String USERNAME = "username";
-    public static final String PASSWORD = "password";
-    public static final String AUTH_TOKEN = "authToken";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
+    private static final String AUTH_TOKEN = "authToken";
 
-    LoginHttpEndpointSyncTd mLoginHttpEndpointSyncTd;
-    AuthTokenCacheTd mAuthTokenCacheTd;
-    EventBusPosterTd mEventBusPosterTd;
+    private LoginHttpEndpointSyncTd mLoginHttpEndpointSyncTd;
+    private AuthTokenCacheTd mAuthTokenCacheTd;
+    private EventBusPosterTd mEventBusPosterTd;
 
-    LoginUseCaseSync SUT;
+    private LoginUseCaseSync SUT;
 
     @Before
     public void setup() throws Exception {
@@ -96,34 +96,34 @@ public class LoginUseCaseSyncTest {
     }
 
     @Test
-    public void loginSync_success_successReturned() throws Exception {
+    public void loginSync_success_returnSuccess() throws Exception {
         UseCaseResult result = SUT.loginSync(USERNAME, PASSWORD);
         assertThat(result, is(UseCaseResult.SUCCESS));
     }
 
     @Test
-    public void loginSync_serverError_failureReturned() throws Exception {
+    public void loginSync_serverError_returnFailure() throws Exception {
         mLoginHttpEndpointSyncTd.mIsServerError = true;
         UseCaseResult result = SUT.loginSync(USERNAME, PASSWORD);
         assertThat(result, is(UseCaseResult.FAILURE));
     }
 
     @Test
-    public void loginSync_authError_failureReturned() throws Exception {
+    public void loginSync_authError_returnFailure() throws Exception {
         mLoginHttpEndpointSyncTd.mIsAuthError = true;
         UseCaseResult result = SUT.loginSync(USERNAME, PASSWORD);
         assertThat(result, is(UseCaseResult.FAILURE));
     }
 
     @Test
-    public void loginSync_generalError_failureReturned() throws Exception {
+    public void loginSync_generalError_returnFailure() throws Exception {
         mLoginHttpEndpointSyncTd.mIsGeneralError = true;
         UseCaseResult result = SUT.loginSync(USERNAME, PASSWORD);
         assertThat(result, is(UseCaseResult.FAILURE));
     }
 
     @Test
-    public void loginSync_networkError_networkErrorReturned() throws Exception {
+    public void loginSync_networkError_returnNetworkError() throws Exception {
         mLoginHttpEndpointSyncTd.mIsNetworkError = true;
         UseCaseResult result = SUT.loginSync(USERNAME, PASSWORD);
         assertThat(result, is(UseCaseResult.NETWORK_ERROR));
@@ -133,17 +133,19 @@ public class LoginUseCaseSyncTest {
     // Helper classes
 
     private static class LoginHttpEndpointSyncTd implements LoginHttpEndpointSync {
-        public String mUsername = "";
+        private String mUsername = "";
         private String mPassword = "";
-        public boolean mIsGeneralError;
-        public boolean mIsAuthError;
-        public boolean mIsServerError;
-        public boolean mIsNetworkError;
+
+        private boolean mIsGeneralError;
+        private boolean mIsAuthError;
+        private boolean mIsServerError;
+        private boolean mIsNetworkError;
 
         @Override
         public EndpointResult loginSync(String username, String password) throws NetworkErrorException {
             mUsername = username;
             mPassword = password;
+
             if (mIsGeneralError) {
                 return new EndpointResult(EndpointResultStatus.GENERAL_ERROR, "");
             } else if (mIsAuthError) {
@@ -174,8 +176,8 @@ public class LoginUseCaseSyncTest {
     }
 
     private static class EventBusPosterTd implements EventBusPoster {
-        public Object mEvent;
-        public int mInteractionsCount;
+        private Object mEvent;
+        private int mInteractionsCount;
 
         @Override
         public void postEvent(Object event) {

@@ -1,6 +1,5 @@
 package com.techyourchance.testdoublesfundamentals.example5;
 
-import com.techyourchance.testdoublesfundamentals.example4.networking.NetworkErrorException;
 
 public class ServerUsernameValidator {
 

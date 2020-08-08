@@ -35,11 +35,11 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 public class FetchCartItemsUseCaseTest {
 
     // region constants ----------------------------------------------------------------------------
-    public static final int LIMIT = 10;
-    public static final int PRICE = 5;
-    public static final String DESCRIPTION = "description";
-    public static final String TITLE = "title";
-    public static final String ID = "id";
+    private static final int LIMIT = 10;
+    private static final int PRICE = 5;
+    private static final String DESCRIPTION = "description";
+    private static final String TITLE = "title";
+    private static final String ID = "id";
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
@@ -58,11 +58,6 @@ public class FetchCartItemsUseCaseTest {
         success();
     }
 
-    private List<CartItemSchema> getCartItemSchemes() {
-        List<CartItemSchema> schemas = new ArrayList<>();
-        schemas.add(new CartItemSchema(ID, TITLE, DESCRIPTION, PRICE));
-        return schemas;
-    }
 
     @Test
     public void fetchCartItems_correctLimitPassedToEndpoint() throws Exception {
@@ -137,6 +132,12 @@ public class FetchCartItemsUseCaseTest {
         List<CartItem> cartItems = new ArrayList<>();
         cartItems.add(new CartItem(ID, TITLE, DESCRIPTION, PRICE));
         return cartItems;
+    }
+
+    private List<CartItemSchema> getCartItemSchemes() {
+        List<CartItemSchema> schemas = new ArrayList<>();
+        schemas.add(new CartItemSchema(ID, TITLE, DESCRIPTION, PRICE));
+        return schemas;
     }
 
     private void success() {

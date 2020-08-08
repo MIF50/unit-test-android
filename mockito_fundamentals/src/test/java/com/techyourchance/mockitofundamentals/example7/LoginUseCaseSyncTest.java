@@ -6,12 +6,12 @@ import com.techyourchance.mockitofundamentals.example7.eventbus.LoggedInEvent;
 import com.techyourchance.mockitofundamentals.example7.networking.LoginHttpEndpointSync;
 import com.techyourchance.mockitofundamentals.example7.networking.NetworkErrorException;
 
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
 
@@ -20,29 +20,31 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class LoginUseCaseSyncTest {
 
-    public static final String USERNAME = "username";
-    public static final String PASSWORD = "password";
-    public static final String AUTH_TOKEN = "authToken";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
+    private static final String AUTH_TOKEN = "authToken";
 
-    LoginHttpEndpointSync mLoginHttpEndpointSyncMock;
-    AuthTokenCache mAuthTokenCacheMock;
-    EventBusPoster mEventBusPosterMock;
+    @Mock
+    private LoginHttpEndpointSync mLoginHttpEndpointSyncMock;
 
-    LoginUseCaseSync SUT;
+    @Mock
+    private AuthTokenCache mAuthTokenCacheMock;
+
+    @Mock
+    private EventBusPoster mEventBusPosterMock;
+
+    private LoginUseCaseSync SUT;
 
     @Before
     public void setup() throws Exception {
-        mLoginHttpEndpointSyncMock = mock(LoginHttpEndpointSync.class);
-        mAuthTokenCacheMock = mock(AuthTokenCache.class);
-        mEventBusPosterMock = mock(EventBusPoster.class);
         SUT = new LoginUseCaseSync(mLoginHttpEndpointSyncMock, mAuthTokenCacheMock, mEventBusPosterMock);
         success();
     }
@@ -52,6 +54,7 @@ public class LoginUseCaseSyncTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         SUT.loginSync(USERNAME, PASSWORD);
         verify(mLoginHttpEndpointSyncMock, times(1)).loginSync(ac.capture(), ac.capture());
+
         List<String> captures = ac.getAllValues();
         assertThat(captures.get(0), is(USERNAME));
         assertThat(captures.get(1), is(PASSWORD));
@@ -116,34 +119,34 @@ public class LoginUseCaseSyncTest {
     }
 
     @Test
-    public void loginSync_success_successReturned() throws Exception {
+    public void loginSync_success_returnSuccess() throws Exception {
         LoginUseCaseSync.UseCaseResult result = SUT.loginSync(USERNAME, PASSWORD);
         assertThat(result, is(LoginUseCaseSync.UseCaseResult.SUCCESS));
     }
 
     @Test
-    public void loginSync_serverError_failureReturned() throws Exception {
+    public void loginSync_serverError_returnFailure() throws Exception {
         serverError();
         LoginUseCaseSync.UseCaseResult result = SUT.loginSync(USERNAME, PASSWORD);
         assertThat(result, is(LoginUseCaseSync.UseCaseResult.FAILURE));
     }
 
     @Test
-    public void loginSync_authError_failureReturned() throws Exception {
+    public void loginSync_authError_returnFailure() throws Exception {
         authError();
         LoginUseCaseSync.UseCaseResult result = SUT.loginSync(USERNAME, PASSWORD);
         assertThat(result, is(LoginUseCaseSync.UseCaseResult.FAILURE));
     }
 
     @Test
-    public void loginSync_generalError_failureReturned() throws Exception {
+    public void loginSync_generalError_returnFailure() throws Exception {
         generalError();
         LoginUseCaseSync.UseCaseResult result = SUT.loginSync(USERNAME, PASSWORD);
         assertThat(result, is(LoginUseCaseSync.UseCaseResult.FAILURE));
     }
 
     @Test
-    public void loginSync_networkError_networkErrorReturned() throws Exception {
+    public void loginSync_networkError_returnNetworkError() throws Exception {
         networkError();
         LoginUseCaseSync.UseCaseResult result = SUT.loginSync(USERNAME, PASSWORD);
         assertThat(result, is(LoginUseCaseSync.UseCaseResult.NETWORK_ERROR));
@@ -151,16 +154,19 @@ public class LoginUseCaseSyncTest {
 
     private void networkError() throws Exception {
         doThrow(new NetworkErrorException())
-                .when(mLoginHttpEndpointSyncMock).loginSync(any(String.class), any(String.class));
+                .when(mLoginHttpEndpointSyncMock)
+                .loginSync(any(String.class), any(String.class));
     }
 
     private void success() throws NetworkErrorException {
-        when(mLoginHttpEndpointSyncMock.loginSync(any(String.class), any(String.class)))
+        when(mLoginHttpEndpointSyncMock
+                .loginSync(any(String.class), any(String.class)))
                 .thenReturn(new LoginHttpEndpointSync.EndpointResult(LoginHttpEndpointSync.EndpointResultStatus.SUCCESS, AUTH_TOKEN));
     }
 
     private void generalError() throws Exception {
-        when(mLoginHttpEndpointSyncMock.loginSync(any(String.class), any(String.class)))
+        when(mLoginHttpEndpointSyncMock
+                .loginSync(any(String.class), any(String.class)))
                 .thenReturn(new LoginHttpEndpointSync.EndpointResult(LoginHttpEndpointSync.EndpointResultStatus.GENERAL_ERROR, ""));
     }
 

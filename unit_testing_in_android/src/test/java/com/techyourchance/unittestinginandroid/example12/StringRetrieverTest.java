@@ -33,15 +33,15 @@ import static org.mockito.Mockito.when;
 public class StringRetrieverTest {
 
     // region constants ----------------------------------------------------------------------------
-    public static final int ID = 10;
-    public static final String STRING = "string";
+    private static final int ID = 10;
+    private static final String STRING = "string";
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
     @Mock Context mContextMock;
     // endregion helper fields ---------------------------------------------------------------------
 
-    StringRetriever SUT;
+    private StringRetriever SUT;
 
     @Before
     public void setup() throws Exception {
@@ -58,7 +58,7 @@ public class StringRetrieverTest {
     }
 
     @Test
-    public void getString_correctResultReturned() throws Exception {
+    public void getString_returnCorrectResult() throws Exception {
         // Arrange
         when(mContextMock.getString(ID)).thenReturn(STRING);
         // Act

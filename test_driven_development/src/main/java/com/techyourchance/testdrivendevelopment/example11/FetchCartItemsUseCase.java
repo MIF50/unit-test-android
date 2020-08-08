@@ -17,16 +17,16 @@ public class FetchCartItemsUseCase {
     private final List<Listener> mListeners = new ArrayList<>();
     private final GetCartItemsHttpEndpoint mGetCartItemsHttpEndpoint;
 
-    public FetchCartItemsUseCase(GetCartItemsHttpEndpoint getCartItemsHttpEndpoint) {
+     FetchCartItemsUseCase(GetCartItemsHttpEndpoint getCartItemsHttpEndpoint) {
         mGetCartItemsHttpEndpoint = getCartItemsHttpEndpoint;
     }
 
-    public void fetchCartItemsAndNotify(int limit) {
+    void fetchCartItemsAndNotify(int limit) {
         mGetCartItemsHttpEndpoint.getCartItems(limit, new GetCartItemsHttpEndpoint.Callback() {
 
             @Override
-            public void onGetCartItemsSucceeded(List<CartItemSchema> cartItems) {
-                notifySucceeded(cartItems);
+            public void onGetCartItemsSucceeded(List<CartItemSchema> cartItemsSchema) {
+                notifySucceeded(cartItemsSchema);
             }
 
             @Override
@@ -41,9 +41,9 @@ public class FetchCartItemsUseCase {
         });
     }
 
-    private void notifySucceeded(List<CartItemSchema> cartItems) {
+    private void notifySucceeded(List<CartItemSchema> cartItemsSchema) {
         for (Listener listener : mListeners) {
-            listener.onCartItemsFetched(cartItemsFromSchemas(cartItems));
+            listener.onCartItemsFetched(cartItemsFromSchemas(cartItemsSchema));
         }
     }
 
@@ -66,11 +66,11 @@ public class FetchCartItemsUseCase {
         return cartItems;
     }
 
-    public void registerListener(Listener listener) {
+     void registerListener(Listener listener) {
         mListeners.add(listener);
     }
 
-    public void unregisterListener(Listener listener) {
+     void unregisterListener(Listener listener) {
         mListeners.remove(listener);
     }
 

@@ -5,8 +5,6 @@ import com.techyourchance.testdrivendevelopment.example9.networking.AddToCartHtt
 import com.techyourchance.testdrivendevelopment.example9.networking.CartItemScheme;
 import com.techyourchance.testdrivendevelopment.example9.networking.NetworkErrorException;
 
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,25 +12,19 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.List;
-
 import static com.techyourchance.testdrivendevelopment.example9.networking.AddToCartHttpEndpointSync.EndpointResult.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.ArgumentCaptor.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AddToCartUseCaseSyncTest {
 
     // region constants ----------------------------------------------------------------------------
 
-    public static final String OFFER_ID = "offerId";
-    public static final int AMOUNT = 4;
+    private static final String OFFER_ID = "offerId";
+    private static final int AMOUNT = 4;
 
     // endregion constants -------------------------------------------------------------------------
 
@@ -40,7 +32,7 @@ public class AddToCartUseCaseSyncTest {
     @Mock AddToCartHttpEndpointSync mAddToCartHttpEndpointSyncMock;
     // endregion helper fields ---------------------------------------------------------------------
 
-    AddToCartUseCaseSync SUT;
+    private AddToCartUseCaseSync SUT;
 
     @Before
     public void setup() throws Exception {
@@ -56,12 +48,13 @@ public class AddToCartUseCaseSyncTest {
         SUT.addToCartSync(OFFER_ID, AMOUNT);
         // Assert
         verify(mAddToCartHttpEndpointSyncMock).addToCartSync(ac.capture());
-        assertThat(ac.getValue().getOfferId(), is(OFFER_ID));
-        assertThat(ac.getValue().getAmount(), is(AMOUNT));
+        CartItemScheme cartItemScheme = ac.getValue();
+        assertThat(cartItemScheme.getOfferId(), is(OFFER_ID));
+        assertThat(cartItemScheme.getAmount(), is(AMOUNT));
     }
 
     @Test
-    public void addToCartSync_success_successReturned() throws Exception {
+    public void addToCartSync_success_returnSuccess() throws Exception {
         // Arrange
         // Act
         UseCaseResult result = SUT.addToCartSync(OFFER_ID, AMOUNT);
@@ -70,7 +63,7 @@ public class AddToCartUseCaseSyncTest {
     }
 
     @Test
-    public void addToCartSync_authError_failureReturned() throws Exception {
+    public void addToCartSync_authError_returnFailure() throws Exception {
         // Arrange
         authError();
         // Act
@@ -80,7 +73,7 @@ public class AddToCartUseCaseSyncTest {
     }
 
     @Test
-    public void addToCartSync_generalError_failureReturned() throws Exception {
+    public void addToCartSync_generalError_returnFailure() throws Exception {
         // Arrange
         generalError();
         // Act
@@ -90,7 +83,7 @@ public class AddToCartUseCaseSyncTest {
     }
 
     @Test
-    public void addToCartSync_networkError_networkErrorReturned() throws Exception {
+    public void addToCartSync_networkError_returnNetworkError() throws Exception {
         // Arrange
         networkError();
         // Act

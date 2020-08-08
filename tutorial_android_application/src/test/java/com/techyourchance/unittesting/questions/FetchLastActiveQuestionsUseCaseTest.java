@@ -37,7 +37,7 @@ public class FetchLastActiveQuestionsUseCaseTest {
     @Captor ArgumentCaptor<List<Question>> mQuestionsCaptor;
     // endregion helper fields ---------------------------------------------------------------------
 
-    FetchLastActiveQuestionsUseCase SUT;
+    private FetchLastActiveQuestionsUseCase SUT;
 
     @Before
     public void setup() throws Exception {
@@ -89,9 +89,9 @@ public class FetchLastActiveQuestionsUseCaseTest {
     // region helper classes -----------------------------------------------------------------------
     private static class EndpointTd extends FetchLastActiveQuestionsEndpoint {
 
-        public boolean mFailure;
+        private boolean mFailure;
 
-        public EndpointTd() {
+        private EndpointTd() {
             super(null);
         }
 

@@ -18,15 +18,15 @@ public class LoginUseCaseSync {
     private final AuthTokenCache mAuthTokenCache;
     private final EventBusPoster mEventBusPoster;
 
-    public LoginUseCaseSync(LoginHttpEndpointSync loginHttpEndpointSync,
-                            AuthTokenCache authTokenCache,
-                            EventBusPoster eventBusPoster) {
+    LoginUseCaseSync(LoginHttpEndpointSync loginHttpEndpointSync,
+                     AuthTokenCache authTokenCache,
+                     EventBusPoster eventBusPoster) {
         mLoginHttpEndpointSync = loginHttpEndpointSync;
         mAuthTokenCache = authTokenCache;
         mEventBusPoster = eventBusPoster;
     }
 
-    public UseCaseResult loginSync(String username, String password) {
+    UseCaseResult loginSync(String username, String password) {
         LoginHttpEndpointSync.EndpointResult endpointEndpointResult;
         try {
             endpointEndpointResult = mLoginHttpEndpointSync.loginSync(username, password);

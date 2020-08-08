@@ -18,5 +18,5 @@ public interface GetCartItemsHttpEndpoint {
      * @param limit max amount of cart items to fetch
      * @param callback object to be notified when the request completes
      */
-    public void getCartItems(int limit, Callback callback);
+     void getCartItems(int limit, Callback callback);
 }

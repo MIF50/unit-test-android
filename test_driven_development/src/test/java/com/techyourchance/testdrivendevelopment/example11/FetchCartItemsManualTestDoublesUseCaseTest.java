@@ -25,15 +25,15 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 public class FetchCartItemsManualTestDoublesUseCaseTest {
 
     // region constants ----------------------------------------------------------------------------
-    public static final int LIMIT = 10;
-    public static final int PRICE = 5;
-    public static final String DESCRIPTION = "description";
-    public static final String TITLE = "title";
-    public static final String ID = "id";
+    private static final int LIMIT = 10;
+    private static final int PRICE = 5;
+    private static final String DESCRIPTION = "description";
+    private static final String TITLE = "title";
+    private static final String ID = "id";
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
-    GetCartItemsHttpEndpointTd mGetCartItemsHttpEndpointTd;
+    private GetCartItemsHttpEndpointTd mGetCartItemsHttpEndpointTd;
     @Mock FetchCartItemsUseCase.Listener mListenerMock1;
     @Mock FetchCartItemsUseCase.Listener mListenerMock2;
 
@@ -47,12 +47,6 @@ public class FetchCartItemsManualTestDoublesUseCaseTest {
         mGetCartItemsHttpEndpointTd = new GetCartItemsHttpEndpointTd();
         SUT = new FetchCartItemsUseCase(mGetCartItemsHttpEndpointTd);
         success();
-    }
-
-    private List<CartItemSchema> getCartItemSchemes() {
-        List<CartItemSchema> schemas = new ArrayList<>();
-        schemas.add(new CartItemSchema(ID, TITLE, DESCRIPTION, PRICE));
-        return schemas;
     }
 
     @Test
@@ -122,6 +116,12 @@ public class FetchCartItemsManualTestDoublesUseCaseTest {
     }
 
     // region helper methods -----------------------------------------------------------------------
+
+    private List<CartItemSchema> getCartItemSchemes() {
+        List<CartItemSchema> schemas = new ArrayList<>();
+        schemas.add(new CartItemSchema(ID, TITLE, DESCRIPTION, PRICE));
+        return schemas;
+    }
 
     private List<CartItem> getCartItems() {
         List<CartItem> cartItems = new ArrayList<>();

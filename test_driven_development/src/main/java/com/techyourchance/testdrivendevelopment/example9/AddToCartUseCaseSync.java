@@ -10,16 +10,16 @@ public class AddToCartUseCaseSync {
     public enum UseCaseResult {
         SUCCESS,
         FAILURE,
-        NETWORK_ERROR;
+        NETWORK_ERROR
     }
 
     private final AddToCartHttpEndpointSync mAddToCartHttpEndpointSync;
 
-    public AddToCartUseCaseSync(AddToCartHttpEndpointSync addToCartHttpEndpointSync) {
+    AddToCartUseCaseSync(AddToCartHttpEndpointSync addToCartHttpEndpointSync) {
         mAddToCartHttpEndpointSync = addToCartHttpEndpointSync;
     }
 
-    public UseCaseResult addToCartSync(String offerId, int amount) {
+    UseCaseResult addToCartSync(String offerId, int amount) {
         AddToCartHttpEndpointSync.EndpointResult result;
 
         try {
