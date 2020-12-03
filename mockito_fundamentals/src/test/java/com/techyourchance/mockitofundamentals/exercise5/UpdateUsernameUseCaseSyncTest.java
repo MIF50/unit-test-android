@@ -6,24 +6,20 @@ import com.techyourchance.mockitofundamentals.exercise5.networking.NetworkErrorE
 import com.techyourchance.mockitofundamentals.exercise5.networking.UpdateUsernameHttpEndpointSync;
 import com.techyourchance.mockitofundamentals.exercise5.users.User;
 import com.techyourchance.mockitofundamentals.exercise5.users.UsersCache;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import java.util.List;
-
 
 import static com.techyourchance.mockitofundamentals.exercise5.networking.UpdateUsernameHttpEndpointSync.*;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -32,40 +28,38 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class UpdateUsernameUseCaseSyncTest {
 
-    private static final String USER_ID ="user_id";
-    private static final String USER_NAME = "username";
+    private final static String USER_ID = "user_id";
+    private final static String USER_NAME = "user_name";
 
+    private UpdateUsernameUseCaseSync SUT;
     @Mock
     private UpdateUsernameHttpEndpointSync mUpdateUsernameHttpEndpointSyncMock;
-
     @Mock
     private UsersCache mUserCacheMock;
-
     @Mock
     private EventBusPoster mEventBusPosterMock;
 
-    private UpdateUsernameUseCaseSync SUT;
-
     @Before
-    public void setUp() throws Exception {
+    public void setup() throws NetworkErrorException {
         SUT = new UpdateUsernameUseCaseSync(mUpdateUsernameHttpEndpointSyncMock, mUserCacheMock, mEventBusPosterMock);
         success();
-
     }
 
     @Test
-    public void updateUsername_success_userIdAndUsernamePassedToEndpoint() throws Exception {
+    public void updateUsernameSync_whenSuccess_shouldPassUserIdAndUsernameToEndpoint() throws NetworkErrorException {
+        // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
-        SUT.updateUsernameSync(USER_ID,USER_NAME);
-        verify(mUpdateUsernameHttpEndpointSyncMock,times(1)).updateUsername(ac.capture(),ac.capture());
-
+        // Act
+        SUT.updateUsernameSync(USER_ID, USER_NAME);
+        // Assert
+        verify(mUpdateUsernameHttpEndpointSyncMock).updateUsername(ac.capture(), ac.capture());
         List<String> captures = ac.getAllValues();
-        assertThat(captures.get(0),is(USER_ID));
-        assertThat(captures.get(1),is(USER_NAME));
+        assertThat(captures.get(0), is(USER_ID));
+        assertThat(captures.get(1), is(USER_NAME));
     }
 
     @Test
-    public void updateUsername_success_userCached() throws Exception {
+    public void updateUsernameSync_whenSuccess_shouldUserCached(){
         // Arrange
         ArgumentCaptor<User> ac = ArgumentCaptor.forClass(User.class);
         // Act
@@ -74,120 +68,152 @@ public class UpdateUsernameUseCaseSyncTest {
         verify(mUserCacheMock).cacheUser(ac.capture());
         User cachedUser = ac.getValue();
         assertThat(cachedUser.getUserId(),is(USER_ID));
-        assertThat(cachedUser.getUsername(), is(USER_NAME));
-
-    }
-
-
-    @Test
-    public void updateUsername_generalError_userNotCached()throws Exception {
-        generalError();
-        SUT.updateUsernameSync(USER_ID,USER_NAME);
-        verifyNoMoreInteractions(mUserCacheMock);
+        assertThat(cachedUser.getUsername(),is(USER_NAME));
+        assertThat(ac.getValue(),is(instanceOf(User.class)));
     }
 
     @Test
-    public void updateUsername_authError_userNotCached() throws Exception {
+    public void updateUsernameSync_whenAuthError_shouldUserNotCached() throws NetworkErrorException {
+        // Arrange
         authError();
+        // Act
         SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
         verifyNoMoreInteractions(mUserCacheMock);
     }
 
     @Test
-    public void updateUsername_serverError_userNotCached() throws Exception {
+    public void updateUsernameSync_whenServerError_shouldUserNotCached() throws NetworkErrorException {
+        // Arrange
         serverError();
+        // Act
         SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
         verifyNoMoreInteractions(mUserCacheMock);
     }
 
     @Test
-    public void updateUsername_success_triggerEventPoster() {
-        ArgumentCaptor<Object> ac = ArgumentCaptor.forClass(Object.class);
+    public void updateUsernameSync_whenGeneralError_shouldUserNotCached() throws NetworkErrorException {
+        // Arrange
+        generalError();
+        // Act
         SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
+        verifyNoMoreInteractions(mUserCacheMock);
+    }
+
+    @Test
+    public void updateUsernameSync_whenSuccess_shouldTriggerEventBusPoster() {
+        // Arrange
+        ArgumentCaptor<Object> ac = ArgumentCaptor.forClass(Object.class);
+        // Act
+        SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
         verify(mEventBusPosterMock).postEvent(ac.capture());
         assertThat(ac.getValue(),is(instanceOf(UserDetailsChangedEvent.class)));
-
     }
 
     @Test
-    public void updateUsername_generalError_noInteractionWithEventPosted()throws Exception {
-        generalError();
-        SUT.updateUsernameSync(USER_ID,USER_NAME);
-        verifyNoMoreInteractions(mEventBusPosterMock);
-    }
-
-    @Test
-    public void updateUsername_authError_noInteractionWithEventPosted()throws Exception {
+    public void updateUsernameSync_whenAuthError_shouldNotTriggerEventBustPoster() throws NetworkErrorException {
+        // Arrange
         authError();
+        // Act
         SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
         verifyNoMoreInteractions(mEventBusPosterMock);
-
     }
 
     @Test
-    public void updateUsername_serverError_noInteractionWithEventPosted() throws Exception {
+    public void updateUsernameSync_whenServerError_shouldNotTriggerEventBusPoster() throws NetworkErrorException {
+        // Arrange
         serverError();
+        // Act
         SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
         verifyNoMoreInteractions(mEventBusPosterMock);
     }
 
     @Test
-    public void updateUsername_success_returnSuccess() {
+    public void updateUsernameSync_whenGeneralError_shouldNotTriggerEventBusPoster() throws NetworkErrorException {
+        // Arrange
+        generalError();
+        // Act
+        SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
+        verifyNoMoreInteractions(mEventBusPosterMock);
+    }
+
+    @Test
+    public void updateUsernameSync_whenSuccess_shouldReturnSuccess() {
+        // Act
         UpdateUsernameUseCaseSync.UseCaseResult result = SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
         assertThat(result,is(UpdateUsernameUseCaseSync.UseCaseResult.SUCCESS));
     }
 
     @Test
-    public void updateUsername_serverError_returnFailure()throws Exception {
-        serverError();
-        UpdateUsernameUseCaseSync.UseCaseResult result = SUT.updateUsernameSync(USER_ID,USER_NAME);
-        assertThat(result,is(UpdateUsernameUseCaseSync.UseCaseResult.FAILURE));
-    }
-
-    @Test
-    public void updateUsername_authError_returnFailure() throws Exception {
+    public void updateUsernameSync_whenAuthError_shouldReturnFailure() throws NetworkErrorException {
+        // Arrange
         authError();
+        // Act
         UpdateUsernameUseCaseSync.UseCaseResult result = SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
         assertThat(result,is(UpdateUsernameUseCaseSync.UseCaseResult.FAILURE));
     }
 
     @Test
-    public void updateUsername_generalError_returnFailure() throws Exception {
+    public void updateUsernameSync_whenServerError_shouldReturnFailure() throws NetworkErrorException {
+        // Arrange
+        serverError();
+        // Act
+        UpdateUsernameUseCaseSync.UseCaseResult result = SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
+        assertThat(result,is(UpdateUsernameUseCaseSync.UseCaseResult.FAILURE));
+    }
+
+    @Test
+    public void updateUsernameSync_whenGeneralError_shouldReturnFailure() throws NetworkErrorException {
+        // Arrange
         generalError();
+        // Act
         UpdateUsernameUseCaseSync.UseCaseResult result = SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
         assertThat(result,is(UpdateUsernameUseCaseSync.UseCaseResult.FAILURE));
     }
 
     @Test
-    public void updateUsername_networkError_returnNetworkError() throws Exception {
+    public void updateUsernameSync_whenNetworkError_shouldReturnNetworkError() throws NetworkErrorException {
+        // Arrange
         networkError();
+        // Act
         UpdateUsernameUseCaseSync.UseCaseResult result = SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
         assertThat(result,is(UpdateUsernameUseCaseSync.UseCaseResult.NETWORK_ERROR));
-
     }
 
-    private void success() throws  NetworkErrorException {
-        when(mUpdateUsernameHttpEndpointSyncMock.updateUsername(anyString(),anyString()))
+    private void success() throws NetworkErrorException {
+        when(mUpdateUsernameHttpEndpointSyncMock.updateUsername(any(String.class),any(String.class)))
                 .thenReturn(new EndpointResult(EndpointResultStatus.SUCCESS,USER_ID,USER_NAME));
     }
 
-    private void networkError() throws Exception {
-        doThrow(new NetworkErrorException())
-                .when(mUpdateUsernameHttpEndpointSyncMock).updateUsername(anyString(),anyString());
+    private void authError() throws NetworkErrorException {
+        when(mUpdateUsernameHttpEndpointSyncMock.updateUsername(any(String.class),any(String.class)))
+                .thenReturn(new EndpointResult(EndpointResultStatus.AUTH_ERROR,"",""));
+
     }
 
-    private void generalError()throws Exception {
-        when(mUpdateUsernameHttpEndpointSyncMock.updateUsername(anyString(),anyString()))
+    private void serverError() throws NetworkErrorException {
+        when(mUpdateUsernameHttpEndpointSyncMock.updateUsername(any(String.class),any(String.class)))
+                .thenReturn(new EndpointResult(EndpointResultStatus.SERVER_ERROR,"",""));
+    }
+
+    private void generalError() throws NetworkErrorException {
+        when(mUpdateUsernameHttpEndpointSyncMock.updateUsername(any(String.class),any(String.class)))
                 .thenReturn(new EndpointResult(EndpointResultStatus.GENERAL_ERROR,"",""));
     }
 
-    private void authError() throws Exception {
-        when(mUpdateUsernameHttpEndpointSyncMock.updateUsername(anyString(),anyString()))
-                .thenReturn(new EndpointResult(EndpointResultStatus.AUTH_ERROR,"",""));
-    }
-
-    private void serverError() throws Exception {
-        when(mUpdateUsernameHttpEndpointSyncMock.updateUsername(anyString(),anyString()))
-                .thenReturn(new EndpointResult(EndpointResultStatus.SERVER_ERROR,"",""));
+    private void networkError() throws NetworkErrorException {
+        doThrow(new NetworkErrorException())
+                .when(mUpdateUsernameHttpEndpointSyncMock).updateUsername(any(String.class),any(String.class));
     }
 }

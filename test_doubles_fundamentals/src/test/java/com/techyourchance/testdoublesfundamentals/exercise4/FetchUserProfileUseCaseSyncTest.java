@@ -6,6 +6,7 @@ import com.techyourchance.testdoublesfundamentals.exercise4.users.User;
 import com.techyourchance.testdoublesfundamentals.exercise4.users.UsersCache;
 
 import org.jetbrains.annotations.Nullable;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,148 +20,142 @@ import static org.junit.Assert.*;
 
 public class FetchUserProfileUseCaseSyncTest {
 
-
     private static final String USER_ID = "user_id";
     private static final String FULL_NAME = "fullName";
     private static final String IMAGE_URL = "imageUrl";
 
-    private UserProfileHttpEndpointSyncTd mUserProfileHttpEndpointSyncId;
-    private UsersCacheId mUserCachedId;
-
     private FetchUserProfileUseCaseSync SUT;
-
+    private UserProfileHttpEndpointSyncTD userProfileHttpEndpointSyncTD;
+    private UsersCacheTD userCacheTD;
 
     @Before
-    public void setUp() throws Exception {
-        mUserProfileHttpEndpointSyncId = new UserProfileHttpEndpointSyncTd();
-        mUserCachedId = new UsersCacheId();
-        SUT = new FetchUserProfileUseCaseSync(mUserProfileHttpEndpointSyncId,mUserCachedId);
-
+    public void setup(){
+        userProfileHttpEndpointSyncTD = new UserProfileHttpEndpointSyncTD();
+        userCacheTD = new UsersCacheTD();
+        SUT = new FetchUserProfileUseCaseSync(userProfileHttpEndpointSyncTD,userCacheTD);
     }
 
     @Test
-    public void fetchUserProfileSync_success_userIdPassedToEndPoint() {
+    public void fetchUserSync_whenSuccess_shouldPassUserIdToUserProfileHttpEndPoint(){
         SUT.fetchUserProfileSync(USER_ID);
-        assertThat(mUserProfileHttpEndpointSyncId.mUserId,is(USER_ID));
+        Assert.assertThat(userProfileHttpEndpointSyncTD.userId,is(USER_ID));
     }
 
     @Test
-    public void fetchUserProfileSync_success_userCached() {
+    public void fetchUserSync_whenSuccess_shouldCachedUser(){
         SUT.fetchUserProfileSync(USER_ID);
-        User cachedUser = mUserCachedId.getUser(USER_ID);
-        assertThat(cachedUser.getUserId(), is(USER_ID));
-        assertThat(cachedUser.getFullName(), is(FULL_NAME));
-        assertThat(cachedUser.getUserId(), is(USER_ID));
+        User userCached = userCacheTD.getUser(USER_ID);
+        Assert.assertThat(userCached.getUserId(),is(USER_ID));
+        Assert.assertThat(userCached.getFullName(),is(FULL_NAME));
+        Assert.assertThat(userCached.getImageUrl(),is(IMAGE_URL));
     }
 
     @Test
-    public void fetchUserProfileSync_generalError_userNotCached() {
-        mUserProfileHttpEndpointSyncId.mIsGeneralError = true;
+    public void fetchUserSync_whenAuthError_shouldNotCachedUser() throws NetworkErrorException {
+        userProfileHttpEndpointSyncTD.isAuthError = true;
         SUT.fetchUserProfileSync(USER_ID);
-        assertThat(mUserCachedId.getUser(USER_ID), is(nullValue()));
+        UserProfileHttpEndpointSync.EndpointResult result = userProfileHttpEndpointSyncTD.getUserProfile(USER_ID);
+        Assert.assertThat(result.getUserId(),is(""));
+        Assert.assertThat(result.getFullName(),is(""));
+        Assert.assertThat(result.getImageUrl(),is(""));
     }
 
     @Test
-    public void fetchUserProfileSync_authError_userNotCached() {
-        mUserProfileHttpEndpointSyncId.mIsAuthError = true;
+    public void fetchUserSync_whenGeneralError_shouldNotCachedUser() throws NetworkErrorException {
+        userProfileHttpEndpointSyncTD.isGeneralError = true;
         SUT.fetchUserProfileSync(USER_ID);
-        assertThat(mUserCachedId.getUser(USER_ID), is(nullValue()));
+        UserProfileHttpEndpointSync.EndpointResult result = userProfileHttpEndpointSyncTD.getUserProfile(USER_ID);
+        Assert.assertThat(result.getUserId(),is(""));
+        Assert.assertThat(result.getFullName(),is(""));
+        Assert.assertThat(result.getImageUrl(),is(""));
     }
 
     @Test
-    public void fetchUserProfileSync_serverError_userNotCached() {
-        mUserProfileHttpEndpointSyncId.mIsServerError = true;
+    public void fetchUserSync_whenServerError_shouldNotCachedUser() throws NetworkErrorException {
+        userProfileHttpEndpointSyncTD.isServerError = true;
         SUT.fetchUserProfileSync(USER_ID);
-        assertThat(mUserCachedId.getUser(USER_ID),is(nullValue()));
+        UserProfileHttpEndpointSync.EndpointResult result = userProfileHttpEndpointSyncTD.getUserProfile(USER_ID);
+        Assert.assertThat(result.getUserId(),is(""));
+        Assert.assertThat(result.getFullName(),is(""));
+        Assert.assertThat(result.getImageUrl(),is(""));
     }
 
     @Test
-    public void fetchUserProfileSync_success_returnSuccess() {
-      UseCaseResult result = SUT.fetchUserProfileSync(USER_ID);
-      assertThat(result,is(UseCaseResult.SUCCESS));
+    public void fetchUserSync_whenSuccess_shouldReturnSuccess(){
+        FetchUserProfileUseCaseSync.UseCaseResult result = SUT.fetchUserProfileSync(USER_ID);
+        Assert.assertThat(FetchUserProfileUseCaseSync.UseCaseResult.SUCCESS,is(result));
     }
 
     @Test
-    public void fetchUserProfileSync_serverError_returnFailure() {
-        mUserProfileHttpEndpointSyncId.mIsServerError = true;
-        UseCaseResult result = SUT.fetchUserProfileSync(USER_ID);
-        assertThat(result,is(UseCaseResult.FAILURE));
+    public void fetchUserSync_whenAuthError_shouldReturnFailure(){
+        userProfileHttpEndpointSyncTD.isAuthError = true;
+        FetchUserProfileUseCaseSync.UseCaseResult result = SUT.fetchUserProfileSync(USER_ID);
+        Assert.assertThat(FetchUserProfileUseCaseSync.UseCaseResult.FAILURE,is(result));
     }
 
     @Test
-    public void fetchUserProfileSync_authError_returnFailure() {
-        mUserProfileHttpEndpointSyncId.mIsAuthError = true;
-        UseCaseResult result = SUT.fetchUserProfileSync(USER_ID);
-        assertThat(result,is(UseCaseResult.FAILURE));
+    public void fetchUserSync_whenGeneralError_shouldReturnFailure(){
+        userProfileHttpEndpointSyncTD.isGeneralError = true;
+        FetchUserProfileUseCaseSync.UseCaseResult result = SUT.fetchUserProfileSync(USER_ID);
+        Assert.assertThat(FetchUserProfileUseCaseSync.UseCaseResult.FAILURE,is(result));
     }
 
     @Test
-    public void fetchUserProfileSync_generalError_returnFailure() {
-        mUserProfileHttpEndpointSyncId.mIsGeneralError = true;
-        UseCaseResult result = SUT.fetchUserProfileSync(USER_ID);
-        assertThat(result,is(UseCaseResult.FAILURE));
+    public void fetchUserSync_whenServerError_shouldReturnFailure(){
+        userProfileHttpEndpointSyncTD.isServerError = true;
+        FetchUserProfileUseCaseSync.UseCaseResult result = SUT.fetchUserProfileSync(USER_ID);
+        Assert.assertThat(FetchUserProfileUseCaseSync.UseCaseResult.FAILURE,is(result));
     }
 
     @Test
-    public void fetchUserProfileSync_networkError_returnedNetworkError() {
-        mUserProfileHttpEndpointSyncId.mIsNetworkError = true;
-        UseCaseResult result = SUT.fetchUserProfileSync(USER_ID);
-        assertThat(result,is(UseCaseResult.NETWORK_ERROR));
+    public void fetchUserSync_whenNetworkError_shouldReturnNetworkError(){
+        userProfileHttpEndpointSyncTD.isNetworkError = true;
+        FetchUserProfileUseCaseSync.UseCaseResult result = SUT.fetchUserProfileSync(USER_ID);
+        Assert.assertThat(FetchUserProfileUseCaseSync.UseCaseResult.NETWORK_ERROR,is(result));
     }
 
+    // Helper Classes
+    private static class UserProfileHttpEndpointSyncTD implements UserProfileHttpEndpointSync {
 
-
-
-    //---------------------------------------------------------------------------------------------------------
-    // Helper classes
-    private static class UserProfileHttpEndpointSyncTd implements UserProfileHttpEndpointSync {
-
-        private String mUserId = "";
-
-        private boolean mIsGeneralError;
-        private boolean mIsAuthError;
-        private boolean mIsServerError;
-        private boolean mIsNetworkError;
-
+        private boolean isAuthError;
+        private boolean isGeneralError;
+        private boolean isServerError;
+        private boolean isNetworkError;
+        private String userId;
 
         @Override
         public EndpointResult getUserProfile(String userId) throws NetworkErrorException {
-            mUserId = userId;
-
-            if (mIsGeneralError){
-                return new EndpointResult(EndpointResultStatus.GENERAL_ERROR,"","","");
-            } else if (mIsAuthError){
+            this.userId = userId;
+            if (isAuthError){
                 return new EndpointResult(EndpointResultStatus.AUTH_ERROR,"","","");
-            } else if (mIsServerError) {
+            } else if (isGeneralError){
+                return new EndpointResult(EndpointResultStatus.GENERAL_ERROR,"","","");
+            } else if (isServerError){
                 return new EndpointResult(EndpointResultStatus.SERVER_ERROR,"","","");
-            } else if (mIsNetworkError) {
+            } else if (isNetworkError){
                 throw new NetworkErrorException();
             } else {
                 return new EndpointResult(EndpointResultStatus.SUCCESS,USER_ID,FULL_NAME,IMAGE_URL);
             }
-
         }
     }
 
-    private static class UsersCacheId implements UsersCache {
-        List<User> mUsers = new ArrayList<>(1);
+    private static class UsersCacheTD implements UsersCache {
+
+        private final List<User> users = new ArrayList<>(1);
 
         @Override
         public void cacheUser(User user) {
-            User existingUser = getUser(user.getUserId());
-            if (existingUser != null) {
-                mUsers.remove(existingUser);
-            }
-            mUsers.add(user);
+            User exitUser = getUser(user.getUserId());
+            if (exitUser != null) users.remove(exitUser);
+            users.add(user);
         }
 
         @Nullable
         @Override
         public User getUser(String userId) {
-            for (User user: mUsers) {
-                if (user.getUserId().equals(userId)){
-                    return user;
-                }
+            for (User user: users){
+                if (user.getUserId().equals(userId)) return user;
             }
             return null;
         }

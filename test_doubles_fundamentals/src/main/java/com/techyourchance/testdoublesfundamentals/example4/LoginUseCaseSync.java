@@ -26,17 +26,17 @@ public class LoginUseCaseSync {
         mEventBusPoster = eventBusPoster;
     }
 
-    UseCaseResult loginSync(String username, String password) {
-        LoginHttpEndpointSync.EndpointResult endpointEndpointResult;
+    public UseCaseResult loginSync(String username, String password) {
+        LoginHttpEndpointSync.EndpointResult endpointResult;
         try {
-            endpointEndpointResult = mLoginHttpEndpointSync.loginSync(username, password);
+            endpointResult = mLoginHttpEndpointSync.loginSync(username, password);
         } catch (NetworkErrorException e) {
             return UseCaseResult.NETWORK_ERROR;
         }
 
 
-        if (isSuccessfulEndpointResult(endpointEndpointResult)) {
-            mAuthTokenCache.cacheAuthToken(endpointEndpointResult.getAuthToken());
+        if (isSuccessfulEndpointResult(endpointResult)) {
+            mAuthTokenCache.cacheAuthToken(endpointResult.getAuthToken());
             mEventBusPoster.postEvent(new LoggedInEvent());
             return UseCaseResult.SUCCESS;
         } else {

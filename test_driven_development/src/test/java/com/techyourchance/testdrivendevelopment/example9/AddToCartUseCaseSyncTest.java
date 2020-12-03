@@ -4,119 +4,106 @@ import com.techyourchance.testdrivendevelopment.example9.AddToCartUseCaseSync.Us
 import com.techyourchance.testdrivendevelopment.example9.networking.AddToCartHttpEndpointSync;
 import com.techyourchance.testdrivendevelopment.example9.networking.CartItemScheme;
 import com.techyourchance.testdrivendevelopment.example9.networking.NetworkErrorException;
-
+import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import static com.techyourchance.testdrivendevelopment.example9.networking.AddToCartHttpEndpointSync.EndpointResult.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AddToCartUseCaseSyncTest {
+public class AddToCartUseCaseSyncTest extends TestCase {
 
-    // region constants ----------------------------------------------------------------------------
+    private final static String OFFER_ID = "offer_id";
+    private final static int AMOUNT = 4;
 
-    private static final String OFFER_ID = "offerId";
-    private static final int AMOUNT = 4;
-
-    // endregion constants -------------------------------------------------------------------------
-
-    // region helper fields ------------------------------------------------------------------------
-    @Mock AddToCartHttpEndpointSync mAddToCartHttpEndpointSyncMock;
-    // endregion helper fields ---------------------------------------------------------------------
-
+    @Mock
     private AddToCartUseCaseSync SUT;
 
+    @Mock
+    private AddToCartHttpEndpointSync mAddToCartHttpEndpointSyncMock;
+
     @Before
-    public void setup() throws Exception {
+    public void setup() throws NetworkErrorException {
         SUT = new AddToCartUseCaseSync(mAddToCartHttpEndpointSyncMock);
         success();
     }
 
     @Test
-    public void addToCartSync_correctParametersPassedToEndpoint() throws Exception {
+    public void addToCart_whenSuccess_shouldPassParametersToEndpoint() throws NetworkErrorException {
         // Arrange
         ArgumentCaptor<CartItemScheme> ac = ArgumentCaptor.forClass(CartItemScheme.class);
         // Act
-        SUT.addToCartSync(OFFER_ID, AMOUNT);
-        // Assert
+        SUT.addToCart(OFFER_ID,AMOUNT);
         verify(mAddToCartHttpEndpointSyncMock).addToCartSync(ac.capture());
-        CartItemScheme cartItemScheme = ac.getValue();
-        assertThat(cartItemScheme.getOfferId(), is(OFFER_ID));
-        assertThat(cartItemScheme.getAmount(), is(AMOUNT));
+        // Assert
+        assertThat(ac.getValue().getOfferId(),is(OFFER_ID));
+        assertThat(ac.getValue().getAmount(),is(AMOUNT));
     }
 
     @Test
-    public void addToCartSync_success_returnSuccess() throws Exception {
+    public void addToCart_whenSuccess_shouldReturnSuccess() {
         // Arrange
         // Act
-        UseCaseResult result = SUT.addToCartSync(OFFER_ID, AMOUNT);
+        UseCaseResult result = SUT.addToCart(OFFER_ID,AMOUNT);
         // Assert
-        assertThat(result, is(UseCaseResult.SUCCESS));
+        assertThat(result,is(UseCaseResult.SUCCESS));
     }
 
     @Test
-    public void addToCartSync_authError_returnFailure() throws Exception {
+    public void addToCart_whenAuthError_shouldReturnFailure() throws NetworkErrorException {
         // Arrange
         authError();
         // Act
-        UseCaseResult result = SUT.addToCartSync(OFFER_ID, AMOUNT);
+       UseCaseResult result = SUT.addToCart(OFFER_ID,AMOUNT);
         // Assert
-        assertThat(result, is(UseCaseResult.FAILURE));
+        assertThat(result,is(UseCaseResult.FAILURE));
     }
 
     @Test
-    public void addToCartSync_generalError_returnFailure() throws Exception {
+    public void addToCart_whenGeneralError_shouldReturnFailure() throws NetworkErrorException {
         // Arrange
         generalError();
         // Act
-        UseCaseResult result = SUT.addToCartSync(OFFER_ID, AMOUNT);
+        UseCaseResult result = SUT.addToCart(OFFER_ID,AMOUNT);
         // Assert
-        assertThat(result, is(UseCaseResult.FAILURE));
+        assertThat(result,is(UseCaseResult.FAILURE));
     }
 
     @Test
-    public void addToCartSync_networkError_returnNetworkError() throws Exception {
+    public void addToCart_whenNetworkError_shouldReturnNetworkError() throws NetworkErrorException {
         // Arrange
         networkError();
         // Act
-        UseCaseResult result = SUT.addToCartSync(OFFER_ID, AMOUNT);
+        UseCaseResult result = SUT.addToCart(OFFER_ID,AMOUNT);
         // Assert
-        assertThat(result, is(UseCaseResult.NETWORK_ERROR));
+        assertThat(result,is(UseCaseResult.NETWORK_ERROR));
     }
 
-    // region helper methods -----------------------------------------------------------------------
 
     private void success() throws NetworkErrorException {
         when(mAddToCartHttpEndpointSyncMock.addToCartSync(any(CartItemScheme.class)))
-                .thenReturn(SUCCESS);
+                .thenReturn(AddToCartHttpEndpointSync.EndpointResult.SUCCESS);
     }
 
     private void authError() throws NetworkErrorException {
         when(mAddToCartHttpEndpointSyncMock.addToCartSync(any(CartItemScheme.class)))
-                .thenReturn(AUTH_ERROR);
+                .thenReturn(AddToCartHttpEndpointSync.EndpointResult.AUTH_ERROR);
     }
 
     private void generalError() throws NetworkErrorException {
         when(mAddToCartHttpEndpointSyncMock.addToCartSync(any(CartItemScheme.class)))
-                .thenReturn(GENERAL_ERROR);
+                .thenReturn(AddToCartHttpEndpointSync.EndpointResult.GENERAL_ERROR);
     }
 
     private void networkError() throws NetworkErrorException {
         when(mAddToCartHttpEndpointSyncMock.addToCartSync(any(CartItemScheme.class)))
                 .thenThrow(new NetworkErrorException());
     }
-
-    // endregion helper methods --------------------------------------------------------------------
-
-    // region helper classes -----------------------------------------------------------------------
-    // endregion helper classes --------------------------------------------------------------------
-
 }
