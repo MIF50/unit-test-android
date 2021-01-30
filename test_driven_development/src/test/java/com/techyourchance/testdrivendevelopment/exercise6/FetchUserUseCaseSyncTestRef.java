@@ -26,19 +26,14 @@ import static org.mockito.Mockito.when;
 public class FetchUserUseCaseSyncTestRef {
 
     // region constants ----------------------------------------------------------------------------
-
     private static final String USER_ID = "userId";
     private static final String USERNAME = "username";
     private static final User USER = new User(USER_ID, USERNAME);
-
     // endregion constants -------------------------------------------------------------------------
 
-
     // region helper fields ------------------------------------------------------------------------
-
     private FetchUserHttpEndpointSyncTestDouble mFetchUserHttpEndpointSyncTestDouble;
     @Mock UsersCache mUsersCacheMock;
-
     // endregion helper fields ---------------------------------------------------------------------
 
     private FetchUserUseCaseSync SUT;
@@ -48,14 +43,14 @@ public class FetchUserUseCaseSyncTestRef {
         mFetchUserHttpEndpointSyncTestDouble = new FetchUserHttpEndpointSyncTestDouble();
 
         // TODO: assign your implementation of FetchUserUseCaseSync to SUT
-         SUT = new FetchUserUseCaseSyncImpl(mFetchUserHttpEndpointSyncTestDouble, mUsersCacheMock);
+        SUT = new FetchUserUseCaseSyncImpl(mFetchUserHttpEndpointSyncTestDouble, mUsersCacheMock);
 
         userNotInCache();
         endpointSuccess();
     }
 
     @Test
-    public void fetchUserSync_notInCache_correctUserIdPassedToEndpoint() throws Exception {
+    public void fetchUserSync_whenNotInCache_shouldPassedCorrectUserIdToEndpoint() throws Exception {
         // Arrange
         // Act
         SUT.fetchUserSync(USER_ID);
@@ -64,7 +59,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_notInCacheEndpointSuccess_successStatus() throws Exception {
+    public void fetchUserSync_whenNotInCacheEndpointSuccess_shouldReturnSuccessStatus() throws Exception {
         // Arrange
         // Act
         UseCaseResult result = SUT.fetchUserSync(USER_ID);
@@ -73,7 +68,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_notInCacheEndpointSuccess_returnCorrectUser() throws Exception {
+    public void fetchUserSync_whenNotInCacheEndpointSuccess_shouldReturnCorrectUser() throws Exception {
         // Arrange
         // Act
         UseCaseResult result = SUT.fetchUserSync(USER_ID);
@@ -82,7 +77,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_notInCacheEndpointSuccess_userCached() throws Exception {
+    public void fetchUserSync_whenNotInCacheEndpointSuccess_shouldUserCached() throws Exception {
         // Arrange
         ArgumentCaptor<User> ac = ArgumentCaptor.forClass(User.class);
         // Act
@@ -93,7 +88,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_notInCacheEndpointAuthError_failureStatus() throws Exception {
+    public void fetchUserSync_whenNotInCacheEndpointAuthError_shouldReturnFailureStatus() throws Exception {
         // Arrange
         endpointAuthError();
         // Act
@@ -103,7 +98,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_notInCacheEndpointAuthError_returnNullUser() throws Exception {
+    public void fetchUserSync_whenNotInCacheEndpointAuthError_shouldReturnNullUser() throws Exception {
         // Arrange
         endpointAuthError();
         // Act
@@ -113,7 +108,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_notInCacheEndpointAuthError_nothingCached() throws Exception {
+    public void fetchUserSync_whenNotInCacheEndpointAuthError_shouldReturnNothingCached() throws Exception {
         // Arrange
         endpointAuthError();
         // Act
@@ -123,7 +118,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_notInCacheEndpointServerError_failureStatus() throws Exception {
+    public void fetchUserSync_whenNotInCacheEndpointServerError_shouldReturnFailureStatus() throws Exception {
         // Arrange
         endpointServerError();
         // Act
@@ -133,7 +128,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_notInCacheEndpointServerError_returnNullUser() throws Exception {
+    public void fetchUserSync_whenNotInCacheEndpointServerError_shouldReturnNullUser() throws Exception {
         // Arrange
         endpointServerError();
         // Act
@@ -143,7 +138,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_notInCacheEndpointServerError_nothingCached() throws Exception {
+    public void fetchUserSync_whenNotInCacheEndpointServerError_shouldReturnNothingCached() throws Exception {
         // Arrange
         endpointServerError();
         // Act
@@ -153,7 +148,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_notInCacheEndpointNetworkError_failureStatus() throws Exception {
+    public void fetchUserSync_whenNotInCacheEndpointNetworkError_shouldReturnFailureStatus() throws Exception {
         // Arrange
         endpointNetworkError();
         // Act
@@ -163,7 +158,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_notInCacheEndpointNetworkError_returnNullUser() throws Exception {
+    public void fetchUserSync_whenNotInCacheEndpointNetworkError_shouldReturnNullUser() throws Exception {
         // Arrange
         endpointNetworkError();
         // Act
@@ -173,7 +168,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_notInCacheEndpointNetworkError_nothingCached() throws Exception {
+    public void fetchUserSync_whenNotInCacheEndpointNetworkError_shouldReturnNothingCached() throws Exception {
         // Arrange
         endpointNetworkError();
         // Act
@@ -183,7 +178,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_correctUserIdPassedToCache() throws Exception {
+    public void fetchUserSync_whenInCache_shouldPassedCorrectUserIdToCache() throws Exception {
         // Arrange
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         // Act
@@ -194,7 +189,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_inCache_successStatus() throws Exception {
+    public void fetchUserSync_whenInCache_shouldReturnSuccessStatus() throws Exception {
         // Arrange
         userInCache();
         // Act
@@ -204,7 +199,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_inCache_returnCachedUser() throws Exception {
+    public void fetchUserSync_whenInCache_shouldReturnCachedUser() throws Exception {
         // Arrange
         userInCache();
         // Act
@@ -214,7 +209,7 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     @Test
-    public void fetchUserSync_inCache_endpointNotPolled() throws Exception {
+    public void fetchUserSync_whenInCache_shouldReturnEndpointNotPolled() throws Exception {
         // Arrange
         userInCache();
         // Act
@@ -224,7 +219,6 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     // region helper methods -----------------------------------------------------------------------
-
     private void userNotInCache() {
         when(mUsersCacheMock.getUser(anyString())).thenReturn(null);
     }
@@ -235,7 +229,6 @@ public class FetchUserUseCaseSyncTestRef {
 
     private void endpointSuccess() {
         // endpoint test double is set up for success by default; this method is for clarity of intent
-
     }
 
     private void endpointAuthError() {
@@ -247,12 +240,10 @@ public class FetchUserUseCaseSyncTestRef {
     }
 
     private void endpointNetworkError() { mFetchUserHttpEndpointSyncTestDouble.mNetworkError = true;}
-
     // endregion helper methods --------------------------------------------------------------------
 
 
     // region helper classes -----------------------------------------------------------------------
-
     static class FetchUserHttpEndpointSyncTestDouble implements FetchUserHttpEndpointSync {
 
         private int mRequestCount;
@@ -277,7 +268,6 @@ public class FetchUserUseCaseSyncTestRef {
             }
         }
     }
-
     // endregion helper classes --------------------------------------------------------------------
 
 }

@@ -8,11 +8,14 @@ import com.techyourchance.testdrivendevelopment.exercise6.users.UsersCache;
 
 public class FetchUserUseCaseSyncImpl implements FetchUserUseCaseSync {
 
-    private FetchUserHttpEndpointSync mFetchUserHttpEndpointSync;
-    private UsersCache mUsersCache;
+    private final FetchUserHttpEndpointSync mFetchUserHttpEndpointSync;
+    private final UsersCache mUsersCache;
 
 
-    public FetchUserUseCaseSyncImpl(FetchUserHttpEndpointSync mFetchUserHttpEndpointSync, UsersCache mUsersCache) {
+    public FetchUserUseCaseSyncImpl(
+            FetchUserHttpEndpointSync mFetchUserHttpEndpointSync,
+            UsersCache mUsersCache
+    ) {
         this.mFetchUserHttpEndpointSync = mFetchUserHttpEndpointSync;
         this.mUsersCache = mUsersCache;
     }
@@ -42,9 +45,6 @@ public class FetchUserUseCaseSyncImpl implements FetchUserUseCaseSync {
                     throw new RuntimeException("invalid status" + fetchUser.getStatus());
 
             }
-
         }
-
     }
-
 }

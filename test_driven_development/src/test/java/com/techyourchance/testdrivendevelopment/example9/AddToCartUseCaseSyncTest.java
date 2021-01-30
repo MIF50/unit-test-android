@@ -61,7 +61,7 @@ public class AddToCartUseCaseSyncTest extends TestCase {
         // Arrange
         authError();
         // Act
-       UseCaseResult result = SUT.addToCart(OFFER_ID,AMOUNT);
+        UseCaseResult result = SUT.addToCart(OFFER_ID,AMOUNT);
         // Assert
         assertThat(result,is(UseCaseResult.FAILURE));
     }

@@ -1,6 +1,5 @@
 package com.techyourchance.testdrivendevelopment.example10.networking;
 
-
 public interface PingServerHttpEndpointSync {
 
     enum EndpointResult {
@@ -10,6 +9,4 @@ public interface PingServerHttpEndpointSync {
     }
 
     EndpointResult pingServerSync();
-
-
 }

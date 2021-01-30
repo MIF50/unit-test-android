@@ -8,27 +8,34 @@ import com.techyourchance.testdrivendevelopment.example9.networking.NetworkError
 public class AddToCartUseCaseSync {
 
     public enum UseCaseResult {
-        SUCCESS,FAILURE,NETWORK_ERROR
+        SUCCESS,
+        FAILURE,
+        NETWORK_ERROR
     }
 
     private final AddToCartHttpEndpointSync mAddToCartHttpEndpointSync;
 
-    public AddToCartUseCaseSync(AddToCartHttpEndpointSync mAddToCartHttpEndpointSync) {
+    public AddToCartUseCaseSync(
+            AddToCartHttpEndpointSync mAddToCartHttpEndpointSync
+    ) {
         this.mAddToCartHttpEndpointSync = mAddToCartHttpEndpointSync;
     }
 
-    public UseCaseResult addToCart(String offerId, int amount) {
+    public UseCaseResult addToCart(
+            String offerId,
+            int amount
+    ) {
         EndpointResult result;
 
         try {
-            result =  mAddToCartHttpEndpointSync.addToCartSync(new CartItemScheme(offerId,amount));
+            result = mAddToCartHttpEndpointSync.addToCartSync(new CartItemScheme(offerId, amount));
         } catch (NetworkErrorException e) {
             return UseCaseResult.NETWORK_ERROR;
         }
 
         switch (result) {
             case SUCCESS:
-                return  UseCaseResult.SUCCESS;
+                return UseCaseResult.SUCCESS;
             case AUTH_ERROR:
             case GENERAL_ERROR:
                 return UseCaseResult.FAILURE;
