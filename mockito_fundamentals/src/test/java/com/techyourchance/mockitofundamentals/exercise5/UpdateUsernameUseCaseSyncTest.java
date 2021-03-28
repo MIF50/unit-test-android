@@ -73,6 +73,25 @@ public class UpdateUsernameUseCaseSyncTest {
     }
 
     @Test
+    public void updateUsernameSync_whenSuccess_shouldTriggerEventBusPoster() {
+        // Arrange
+        ArgumentCaptor<Object> ac = ArgumentCaptor.forClass(Object.class);
+        // Act
+        SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
+        verify(mEventBusPosterMock).postEvent(ac.capture());
+        assertThat(ac.getValue(),is(instanceOf(UserDetailsChangedEvent.class)));
+    }
+
+    @Test
+    public void updateUsernameSync_whenSuccess_shouldReturnSuccess() {
+        // Act
+        UpdateUsernameUseCaseSync.UseCaseResult result = SUT.updateUsernameSync(USER_ID,USER_NAME);
+        // Assert
+        assertThat(result,is(UpdateUsernameUseCaseSync.UseCaseResult.SUCCESS));
+    }
+
+    @Test
     public void updateUsernameSync_whenAuthError_shouldUserNotCached() throws NetworkErrorException {
         // Arrange
         authError();
@@ -103,17 +122,6 @@ public class UpdateUsernameUseCaseSyncTest {
     }
 
     @Test
-    public void updateUsernameSync_whenSuccess_shouldTriggerEventBusPoster() {
-        // Arrange
-        ArgumentCaptor<Object> ac = ArgumentCaptor.forClass(Object.class);
-        // Act
-        SUT.updateUsernameSync(USER_ID,USER_NAME);
-        // Assert
-        verify(mEventBusPosterMock).postEvent(ac.capture());
-        assertThat(ac.getValue(),is(instanceOf(UserDetailsChangedEvent.class)));
-    }
-
-    @Test
     public void updateUsernameSync_whenAuthError_shouldNotTriggerEventBustPoster() throws NetworkErrorException {
         // Arrange
         authError();
@@ -141,14 +149,6 @@ public class UpdateUsernameUseCaseSyncTest {
         SUT.updateUsernameSync(USER_ID,USER_NAME);
         // Assert
         verifyNoMoreInteractions(mEventBusPosterMock);
-    }
-
-    @Test
-    public void updateUsernameSync_whenSuccess_shouldReturnSuccess() {
-        // Act
-        UpdateUsernameUseCaseSync.UseCaseResult result = SUT.updateUsernameSync(USER_ID,USER_NAME);
-        // Assert
-        assertThat(result,is(UpdateUsernameUseCaseSync.UseCaseResult.SUCCESS));
     }
 
     @Test

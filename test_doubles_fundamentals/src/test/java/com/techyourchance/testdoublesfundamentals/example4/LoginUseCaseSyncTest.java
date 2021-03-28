@@ -16,8 +16,8 @@ import static org.junit.Assert.assertThat;
 public class LoginUseCaseSyncTest {
 
     private final static String USERNAME = "username";
-    private final static  String PASSWORD = "password";
-    private final static  String AUTH_TOKEN = "auth_token";
+    private final static String PASSWORD = "password";
+    private final static String AUTH_TOKEN = "auth_token";
 
     private LoginUseCaseSync SUT;
     private LoginHttpEndpointSyncTD mLoginHttpEndpointSyncTD;
@@ -46,6 +46,18 @@ public class LoginUseCaseSyncTest {
     }
 
     @Test
+    public void loginSync_whenLoginSuccess_shouldTriggerLoginEventBus(){
+        SUT.loginSync(USERNAME, PASSWORD);
+        assertThat(mEventBusPosterTD.event, is(instanceOf(LoggedInEvent.class)));
+    }
+
+    @Test
+    public void loginSync_whenLoginSuccess_shouldReturnSuccess(){
+        LoginUseCaseSync.UseCaseResult result = SUT.loginSync(USERNAME, PASSWORD);
+        assertThat(result,is(LoginUseCaseSync.UseCaseResult.SUCCESS));
+    }
+
+    @Test
     public void loginSync_whenLoginAuthError_shouldAuthTokenNotChange(){
         mLoginHttpEndpointSyncTD.isAuthError = true;
         SUT.loginSync(USERNAME,PASSWORD);
@@ -67,12 +79,6 @@ public class LoginUseCaseSyncTest {
     }
 
     @Test
-    public void loginSync_whenLoginSuccess_shouldTriggerLoginEventBus(){
-        SUT.loginSync(USERNAME, PASSWORD);
-        assertThat(mEventBusPosterTD.event, is(instanceOf(LoggedInEvent.class)));
-    }
-
-    @Test
     public void loginSync_whenLoginAuthError_shouldNotTriggerLoginEventBus() {
         mLoginHttpEndpointSyncTD.isAuthError = true;
         SUT.loginSync(USERNAME, PASSWORD);
@@ -91,12 +97,6 @@ public class LoginUseCaseSyncTest {
         mLoginHttpEndpointSyncTD.isServerError = true;
         SUT.loginSync(USERNAME,PASSWORD);
         assertThat(mEventBusPosterTD.triggerCount,is(0));
-    }
-
-    @Test
-    public void loginSync_whenLoginSuccess_shouldReturnSuccess(){
-        LoginUseCaseSync.UseCaseResult result = SUT.loginSync(USERNAME, PASSWORD);
-        assertThat(result,is(LoginUseCaseSync.UseCaseResult.SUCCESS));
     }
 
     @Test

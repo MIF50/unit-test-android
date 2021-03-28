@@ -18,7 +18,7 @@ public class IntervalsAdjacencyDetectorTest {
     }
 
     @Test
-    public void isAdjacent_givenInterval1BeforeInternal2_returnFalse() {
+    public void isAdjacent_whenInterval1BeforeInternal2_shouldReturnFalse() {
         Interval interval1 = new Interval(-1,5);
         Interval interval2 = new Interval(6,13);
 
@@ -27,7 +27,7 @@ public class IntervalsAdjacencyDetectorTest {
     }
 
     @Test
-    public void isAdjacent_givenInterval1AfterInternal2_returnFalse() {
+    public void isAdjacent_whenInterval1AfterInternal2_shouldReturnFalse() {
         Interval interval1 = new Interval(-1,5);
         Interval interval2 = new Interval(-5,-2);
 
@@ -36,7 +36,7 @@ public class IntervalsAdjacencyDetectorTest {
     }
 
     @Test
-    public void isAdjacent_givenInterval1ContainsInterval2_returnFalse() {
+    public void isAdjacent_whenInterval1ContainsInterval2_shouldReturnFalse() {
         Interval interval1 = new Interval(-1,5);
         Interval interval2 = new Interval(0,4);
 
@@ -45,7 +45,7 @@ public class IntervalsAdjacencyDetectorTest {
     }
 
     @Test
-    public void isAdjacent_givenInterval1ContainsWithInterval2_returnFalse() {
+    public void isAdjacent_whenInterval1ContainsWithInterval2_shouldReturnFalse() {
         Interval interval1 = new Interval(-1,5);
         Interval interval2 = new Interval(-2,6);
 
@@ -54,7 +54,7 @@ public class IntervalsAdjacencyDetectorTest {
     }
 
     @Test
-    public void isAdjacent_givenInterval1OverlapInterval2OnStart_returnFalse() {
+    public void isAdjacent_whenInterval1OverlapInterval2OnStart_shouldReturnFalse() {
         Interval interval1 = new Interval(-1,5);
         Interval interval2 = new Interval(-3,4);
 
@@ -64,7 +64,7 @@ public class IntervalsAdjacencyDetectorTest {
     }
 
     @Test
-    public void isAdjacent_givenInterval1OverlapInterval2OnEnd_returnFalse() {
+    public void isAdjacent_whenInterval1OverlapInterval2OnEnd_shouldReturnFalse() {
         Interval interval1 = new Interval(-1,5);
         Interval interval2 = new Interval(3,12);
 
@@ -73,7 +73,7 @@ public class IntervalsAdjacencyDetectorTest {
     }
 
     @Test
-    public void isAdjacent_givenInterval1TheSameInterval2_returnFalse() {
+    public void isAdjacent_whenInterval1TheSameInterval2_shouldReturnFalse() {
         Interval interval1 = new Interval(-1,5);
         Interval interval2 = new Interval(-1,5);
 
@@ -82,7 +82,7 @@ public class IntervalsAdjacencyDetectorTest {
     }
 
     @Test
-    public void isAdjacent_givenIntervalIsAfterAdjacentInterval2_returnTrue() {
+    public void isAdjacent_whenIntervalIsAfterAdjacentInterval2_shouldReturnTrue() {
         Interval interval1 = new Interval(-1,5);
         Interval interval2 = new Interval(-5,-1);
 
@@ -91,7 +91,7 @@ public class IntervalsAdjacencyDetectorTest {
     }
 
     @Test
-    public void isAdjacent_givenIntervalIsBeforeAdjacentInterval2_returnTrue() {
+    public void isAdjacent_whenIntervalIsBeforeAdjacentInterval2_shouldReturnTrue() {
         Interval interval1 = new Interval(-1,5);
         Interval interval2 = new Interval(5,8);
 

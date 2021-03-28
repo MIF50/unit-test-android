@@ -16,19 +16,19 @@ public class PositiveNumberValidatorTest {
     }
 
     @Test
-    public void isPositive_givePositiveNumber_returnTrue() {
+    public void isPositive_whenPositiveNumber_shouldReturnTrue() {
         boolean result = SUT.isPositive(1);
         assertThat(result, is(true));
     }
 
     @Test
-    public void isPositive_giveZero_returnFalse() {
+    public void isPositive_whenZero_shouldReturnFalse() {
         boolean result = SUT.isPositive(0);
         assertThat(result, is(false));
     }
 
     @Test
-    public void isPositive_giveNegativeNumber_returnFalse() {
+    public void isPositive_whenNegativeNumber_shouldReturnFalse() {
         boolean result = SUT.isPositive(-1);
         assertThat(result, is(false));
     }

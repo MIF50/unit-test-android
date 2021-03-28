@@ -16,25 +16,25 @@ public class UserInputValidatorTest {
     }
 
     @Test
-    public void isValidFullName_validFullName_returnTrue() throws Exception {
+    public void isValidFullName_whenValidFullName_shouldReturnTrue() throws Exception {
         boolean result = SUT.isValidFullName("validFullName");
         assertThat(result, is(true));
     }
 
     @Test
-    public void isValidFullName_invalidFullName_returnFalse() throws Exception {
+    public void isValidFullName_whenInvalidFullName_shouldReturnFalse() throws Exception {
         boolean result = SUT.isValidFullName("");
         assertThat(result, is(false));
     }
 
     @Test
-    public void isValidUsername_validUsername_returnTrue() throws Exception {
+    public void isValidUsername_whenValidUsername_shouldReturnTrue() throws Exception {
         boolean result = SUT.isValidUsername("validUsername");
         assertThat(result, is(true));
     }
 
     @Test
-    public void isValidUsername_invalidUsername_returnFalse() throws Exception {
+    public void isValidUsername_whenInvalidUsername_shouldReturnFalse() throws Exception {
         boolean result = SUT.isValidUsername("");
         assertThat(result, is(false));
     }

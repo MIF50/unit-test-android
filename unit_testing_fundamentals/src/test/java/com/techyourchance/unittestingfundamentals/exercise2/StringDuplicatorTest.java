@@ -17,20 +17,20 @@ public class StringDuplicatorTest {
     }
 
     @Test
-    public void duplicate_givenEmptyString_returnEmptyString() {
+    public void duplicate_whenEmptyString_shouldReturnEmptyString() {
         String result = SUT.duplicate("");
         assertThat(result, is(""));
     }
 
     @Test
-    public void duplicate_givenOneCharacter_returnTwoCharacter() {
+    public void duplicate_whenOneCharacter_shouldReturnTwoCharacter() {
         String result = SUT.duplicate("a");
         assertThat(result,is("aa"));
 
     }
 
     @Test
-    public void duplicate_giveLongString_returnDuplicateLongString() {
+    public void duplicate_whenLongString_shouldReturnDuplicateLongString() {
         String result = SUT.duplicate("Mohamed Ibrahim");
         assertThat(result, is("Mohamed IbrahimMohamed Ibrahim"));
     }

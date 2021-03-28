@@ -16,19 +16,19 @@ public class StringReverserTest {
     }
 
     @Test
-    public void reverse_givenEmptyString_returnEmptyString() throws Exception {
+    public void reverse_whenEmptyString_shouldReturnEmptyString() throws Exception {
         String result = SUT.reverse("");
         assertThat(result, is(""));
     }
 
     @Test
-    public void reverse_givenSingleCharacter_returnSameString() throws Exception {
+    public void reverse_whenSingleCharacter_shouldReturnSameString() throws Exception {
         String result = SUT.reverse("a");
         assertThat(result, is("a"));
     }
 
     @Test
-    public void reverse_givenLongString_returnReversedString() throws Exception {
+    public void reverse_whenLongString_shouldReturnReversedString() throws Exception {
         String result = SUT.reverse("Vasiliy Zukanov");
         assertThat(result, is("vonakuZ yilisaV"));
     }

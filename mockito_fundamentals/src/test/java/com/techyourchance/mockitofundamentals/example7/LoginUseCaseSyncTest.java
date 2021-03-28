@@ -19,6 +19,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -55,8 +56,8 @@ public class LoginUseCaseSyncTest {
         SUT.loginSync(USERNAME,PASSWORD);
         verify(mLoginHttpEndpointSyncMock,times(1)).loginSync(ac.capture(),ac.capture());
         List<String> captures = ac.getAllValues();
-        Assert.assertThat(captures.get(0),is(USERNAME));
-        Assert.assertThat(captures.get(1),is(PASSWORD));
+        assertThat(captures.get(0),is(USERNAME));
+        assertThat(captures.get(1),is(PASSWORD));
     }
 
     @Test
@@ -64,7 +65,7 @@ public class LoginUseCaseSyncTest {
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         SUT.loginSync(USERNAME,PASSWORD);
         verify(mAuthTokenCacheMock).cacheAuthToken(ac.capture());
-        Assert.assertThat(ac.getValue(),is(AUTH_TOKEN));
+        assertThat(ac.getValue(),is(AUTH_TOKEN));
     }
 
     @Test
@@ -93,7 +94,7 @@ public class LoginUseCaseSyncTest {
         ArgumentCaptor<Object> ac = ArgumentCaptor.forClass(Object.class);
         SUT.loginSync(USERNAME,PASSWORD);
         verify(mEventBusPosterMock).postEvent(ac.capture());
-        Assert.assertThat(ac.getValue(),is(instanceOf(LoggedInEvent.class)));
+        assertThat(ac.getValue(),is(instanceOf(LoggedInEvent.class)));
     }
 
     @Test
@@ -120,35 +121,35 @@ public class LoginUseCaseSyncTest {
     @Test
     public void loginSync_whenSuccess_shouldReturnSuccess(){
         LoginUseCaseSync.UseCaseResult result = SUT.loginSync(USERNAME,PASSWORD);
-        Assert.assertThat(result, is(LoginUseCaseSync.UseCaseResult.SUCCESS));
+        assertThat(result, is(LoginUseCaseSync.UseCaseResult.SUCCESS));
     }
 
     @Test
     public void loginSync_whenServerError_shouldReturnFailure() throws NetworkErrorException {
         serverError();
         LoginUseCaseSync.UseCaseResult result = SUT.loginSync(USERNAME,PASSWORD);
-        Assert.assertThat(result,is(LoginUseCaseSync.UseCaseResult.FAILURE));
+        assertThat(result,is(LoginUseCaseSync.UseCaseResult.FAILURE));
     }
 
     @Test
     public void loginSync_whenAuthError_shouldReturnFailure() throws NetworkErrorException {
         authError();
         LoginUseCaseSync.UseCaseResult result = SUT.loginSync(USERNAME,PASSWORD);
-        Assert.assertThat(result,is(LoginUseCaseSync.UseCaseResult.FAILURE));
+        assertThat(result,is(LoginUseCaseSync.UseCaseResult.FAILURE));
     }
 
     @Test
     public void loginSync_whenGeneralError_shouldReturnFailure() throws NetworkErrorException {
         generalError();
         LoginUseCaseSync.UseCaseResult result = SUT.loginSync(USERNAME,PASSWORD);
-        Assert.assertThat(result,is(LoginUseCaseSync.UseCaseResult.FAILURE));
+        assertThat(result,is(LoginUseCaseSync.UseCaseResult.FAILURE));
     }
 
     @Test
     public void loginSync_whenNetwork_shouldReturnNetworkError() throws NetworkErrorException {
         networkError();
         LoginUseCaseSync.UseCaseResult result = SUT.loginSync(USERNAME,PASSWORD);
-        Assert.assertThat(result,is(LoginUseCaseSync.UseCaseResult.NETWORK_ERROR));
+        assertThat(result,is(LoginUseCaseSync.UseCaseResult.NETWORK_ERROR));
     }
 
     private void success() throws NetworkErrorException {

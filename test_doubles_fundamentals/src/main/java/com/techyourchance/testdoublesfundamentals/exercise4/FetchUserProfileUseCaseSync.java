@@ -39,12 +39,6 @@ public class FetchUserProfileUseCaseSync {
             return UseCaseResult.NETWORK_ERROR;
         }
 
-        if (isSuccessfulEndpointResult(endpointResult)) {
-            mUsersCache.cacheUser(
-                    new User(userId, endpointResult.getFullName(), endpointResult.getImageUrl()));
-            return UseCaseResult.SUCCESS;
-        }
-
         // the bug here is that I return wrong result in case of an unsuccessful server response
         return UseCaseResult.FAILURE;
     }

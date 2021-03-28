@@ -5,12 +5,16 @@ import com.techyourchance.testdrivendevelopment.example9.networking.AddToCartHtt
 import com.techyourchance.testdrivendevelopment.example9.networking.CartItemScheme;
 import com.techyourchance.testdrivendevelopment.example9.networking.NetworkErrorException;
 import junit.framework.TestCase;
+
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,6 +47,7 @@ public class AddToCartUseCaseSyncTest extends TestCase {
         SUT.addToCart(OFFER_ID,AMOUNT);
         verify(mAddToCartHttpEndpointSyncMock).addToCartSync(ac.capture());
         // Assert
+        assertThat(ac.getValue(), instanceOf(CartItemScheme.class));
         assertThat(ac.getValue().getOfferId(),is(OFFER_ID));
         assertThat(ac.getValue().getAmount(),is(AMOUNT));
     }
