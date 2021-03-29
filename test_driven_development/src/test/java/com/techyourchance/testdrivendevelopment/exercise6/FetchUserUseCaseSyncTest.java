@@ -20,7 +20,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -44,7 +43,7 @@ public class FetchUserUseCaseSyncTest {
         mFetchUserHttpEndpointSyncTestDouble = new FetchUserHttpEndpointSyncTestDouble();
         SUT = new FetchUserUseCaseSyncImpl(mFetchUserHttpEndpointSyncTestDouble, mUsersCacheMock);
         userNotInCache();
-        endpointSuccess();
+        success();
     }
 
     @Test
@@ -88,7 +87,7 @@ public class FetchUserUseCaseSyncTest {
     @Test
     public void fetchUserSync_whenNotInCacheEndpointAuthError_shouldReturnFailure() throws Exception {
         // Arrange
-        endpointAuthError();
+        authError();
         // Act
         UseCaseResult result = SUT.fetchUserSync(USER_ID);
         // Assert
@@ -98,7 +97,7 @@ public class FetchUserUseCaseSyncTest {
     @Test
     public void fetchUserSync_whenNotInCacheEndpointAuthError_shouldReturnNullUser() throws Exception {
         // Arrange
-        endpointAuthError();
+        authError();
         // Act
         UseCaseResult result = SUT.fetchUserSync(USER_ID);
         // Assert
@@ -108,7 +107,7 @@ public class FetchUserUseCaseSyncTest {
     @Test
     public void fetchUserSync_whenNotInCacheEndpointAuthError_shouldReturnNothingCached() throws Exception {
         // Arrange
-        endpointAuthError();
+        authError();
         // Act
         SUT.fetchUserSync(USER_ID);
         // Assert
@@ -118,7 +117,7 @@ public class FetchUserUseCaseSyncTest {
     @Test
     public void fetchUserSync_whenNotInCacheEndpointServerError_shouldReturnFailure() throws Exception {
         // Arrange
-        endpointServerError();
+        serverError();
         // Act
         UseCaseResult result = SUT.fetchUserSync(USER_ID);
         // Assert
@@ -128,7 +127,7 @@ public class FetchUserUseCaseSyncTest {
     @Test
     public void fetchUserSync_whenNotInCacheEndpointServerError_shouldReturnNullUser() throws Exception {
         // Arrange
-        endpointServerError();
+        serverError();
         // Act
         UseCaseResult result = SUT.fetchUserSync(USER_ID);
         // Assert
@@ -138,7 +137,7 @@ public class FetchUserUseCaseSyncTest {
     @Test
     public void fetchUserSync_whenNotInCacheEndpointServerError_shouldReturnNothingCached() throws Exception {
         // Arrange
-        endpointServerError();
+        serverError();
         // Act
         SUT.fetchUserSync(USER_ID);
         // Assert
@@ -148,7 +147,7 @@ public class FetchUserUseCaseSyncTest {
     @Test
     public void fetchUserSync_whenNotInCacheEndpointNetworkError_shouldReturnNetworkError() throws Exception {
         // Arrange
-        endpointNetworkError();
+        networkError();
         // Act
         UseCaseResult result = SUT.fetchUserSync(USER_ID);
         // Assert
@@ -158,7 +157,7 @@ public class FetchUserUseCaseSyncTest {
     @Test
     public void fetchUserSync_whenNotInCacheEndpointNetworkError_shouldReturnNullUser() throws Exception {
         // Arrange
-        endpointNetworkError();
+        networkError();
         // Act
         UseCaseResult result = SUT.fetchUserSync(USER_ID);
         // Assert
@@ -168,7 +167,7 @@ public class FetchUserUseCaseSyncTest {
     @Test
     public void fetchUserSync_whenNotInCacheEndpointNetworkError_shouldReturnNothingCached() throws Exception {
         // Arrange
-        endpointNetworkError();
+        networkError();
         // Act
         SUT.fetchUserSync(USER_ID);
         // Assert
@@ -225,19 +224,19 @@ public class FetchUserUseCaseSyncTest {
         when(mUsersCacheMock.getUser(anyString())).thenReturn(USER);
     }
 
-    private void endpointSuccess() {
+    private void success() {
         // endpoint test double is set up for success by default; this method is for clarity of intent
     }
 
-    private void endpointAuthError() {
+    private void authError() {
         mFetchUserHttpEndpointSyncTestDouble.mAuthError = true;
     }
 
-    private void endpointServerError() {
+    private void serverError() {
         mFetchUserHttpEndpointSyncTestDouble.mServerError = true;
     }
 
-    private void endpointNetworkError() { mFetchUserHttpEndpointSyncTestDouble.mNetworkError = true;}
+    private void networkError() { mFetchUserHttpEndpointSyncTestDouble.mNetworkError = true;}
     // endregion helper methods --------------------------------------------------------------------
 
 

@@ -10,8 +10,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -65,15 +63,18 @@ public class PingServerSyncUseCaseTest {
     // region helper methods -----------------------------------------------------------------------
 
     private void success() {
-        when(mPingServerHttpEndpointSyncMock.pingServerSync()).thenReturn(PingServerHttpEndpointSync.EndpointResult.SUCCESS);
+        when(mPingServerHttpEndpointSyncMock.pingServerSync())
+                .thenReturn(PingServerHttpEndpointSync.EndpointResult.SUCCESS);
     }
 
     private void networkError() {
-        when(mPingServerHttpEndpointSyncMock.pingServerSync()).thenReturn(PingServerHttpEndpointSync.EndpointResult.NETWORK_ERROR);
+        when(mPingServerHttpEndpointSyncMock.pingServerSync())
+                .thenReturn(PingServerHttpEndpointSync.EndpointResult.NETWORK_ERROR);
     }
 
     private void generalError() {
-        when(mPingServerHttpEndpointSyncMock.pingServerSync()).thenReturn(PingServerHttpEndpointSync.EndpointResult.GENERAL_ERROR);
+        when(mPingServerHttpEndpointSyncMock.pingServerSync())
+                .thenReturn(PingServerHttpEndpointSync.EndpointResult.GENERAL_ERROR);
     }
 
     // endregion helper methods --------------------------------------------------------------------
