@@ -48,8 +48,6 @@ public class FetchContactUseCaseTest {
     @Captor ArgumentCaptor<List<Contact>> mAcListContact;
 
     // end region helper fields --------------------------------------------------
-
-
     private FetchContactUseCase SUT;
 
     @Before
@@ -59,12 +57,8 @@ public class FetchContactUseCaseTest {
 
     }
 
-
-
-    // fetch contact correct filter term passed to endpoint
-
     @Test
-    public void fetchContact_correctFilter_passedToEndpoint() {
+    public void fetchContact_shouldPassFilterTermToEndpoint() {
         // Arrange
         ArgumentCaptor<String> actString = ArgumentCaptor.forClass(String.class);
         // Act
@@ -74,10 +68,9 @@ public class FetchContactUseCaseTest {
         assertThat(actString.getValue(),is(FILTER_TERM));
     }
 
-    // fetch contact correct success observers notified with correct data
 
     @Test
-    public void fetchContact_success_observersNotifiedWithCorrectData() {
+    public void fetchContact_whenSuccess_shouldObserversNotifiedWithCorrectData() {
         // Arrange
         SUT.registerListener(mListenerMock1);
         SUT.registerListener(mListenerMock2);
@@ -96,11 +89,8 @@ public class FetchContactUseCaseTest {
     }
 
 
-
-    // fetch contact success unsubscribed not notified
-
     @Test
-    public void fetchContact_success_unsubscribedObserversNotNotified() {
+    public void fetchContact_whenSuccess_shouldUnsubscribedObserversNotNotified() {
         // Arrange
         // Act
         SUT.registerListener(mListenerMock1);
@@ -112,11 +102,8 @@ public class FetchContactUseCaseTest {
         verifyNoMoreInteractions(mListenerMock2);
     }
 
-
-
-    // fetch contact general error observers notified failure
     @Test
-    public void fetchContact_generalError_observersNotifiedOfFailure() {
+    public void fetchContact_whenGeneralError_shouldObserversNotifiedOfFailure() {
         // Arrange
         generalError();
         // Act
@@ -128,11 +115,8 @@ public class FetchContactUseCaseTest {
         verify(mListenerMock2).onFetchContactFailed();
     }
 
-    // fetch contact network error observers notified failure
-
-
     @Test
-    public void fetchContact_networkError_observersNotifiedOfFailure() {
+    public void fetchContact_whenNetworkError_shouldObserversNotifiedOfFailure() {
         // Arrange
         networkError();
         // Act

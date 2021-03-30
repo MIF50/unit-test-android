@@ -55,7 +55,6 @@ public class FetchReputationUseCaseSyncTest {
     @Test
     public void fetchReputation_whenGeneralError_shouldNotTrigger() {
         generalError();
-        ArgumentCaptor<Integer> ac = ArgumentCaptor.forClass(Integer.class);
         SUT.fetchReputation();
         verifyNoMoreInteractions(eventBusMock);
     }
@@ -70,11 +69,9 @@ public class FetchReputationUseCaseSyncTest {
     @Test
     public void fetchReputation_whenNetworkError_shouldNotTrigger() {
         networkError();
-        ArgumentCaptor<Integer> ac = ArgumentCaptor.forClass(Integer.class);
         SUT.fetchReputation();
         verifyNoMoreInteractions(eventBusMock);
     }
-
 
     // helper method
     public void success() {
@@ -97,5 +94,4 @@ public class FetchReputationUseCaseSyncTest {
                         .EndpointResult(GetReputationHttpEndpointSync.EndpointStatus.NETWORK_ERROR, 0)
                 );
     }
-
 }

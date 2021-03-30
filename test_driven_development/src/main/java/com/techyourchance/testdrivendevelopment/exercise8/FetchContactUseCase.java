@@ -9,14 +9,12 @@ import java.util.List;
 
 public class FetchContactUseCase {
 
-
-
     public interface Listener {
         void onContactFetched(List<Contact> contacts);
         void onFetchContactFailed();
     }
 
-    private GetContactsHttpEndpoint mGetContactHttpEndpoint;
+    private final GetContactsHttpEndpoint mGetContactHttpEndpoint;
     private final List<Listener> mListeners = new ArrayList<>();
 
     public FetchContactUseCase(GetContactsHttpEndpoint mGetContactHttpEndpointMock) {
@@ -73,8 +71,5 @@ public class FetchContactUseCase {
 
     public void unregisterListener(Listener listener) {
         mListeners.remove(listener);
-
     }
-
-
 }

@@ -49,7 +49,7 @@ public class StringRetrieverTest {
     }
 
     @Test
-    public void getString_correctParameterPassedToContext() throws Exception {
+    public void getString_shouldPassCorrectIdToContext() throws Exception {
         // Arrange
         // Act
         SUT.getString(ID);
@@ -58,13 +58,18 @@ public class StringRetrieverTest {
     }
 
     @Test
-    public void getString_returnCorrectResult() throws Exception {
+    public void getString_whenSuccess_shouldReturnString() throws Exception {
         // Arrange
-        when(mContextMock.getString(ID)).thenReturn(STRING);
+        success();
         // Act
         String result = SUT.getString(ID);
         // Assert
         assertThat(result, is(STRING));
+    }
+
+    private void success() {
+        when(mContextMock.getString(ID))
+                .thenReturn(STRING);
     }
 
     // region helper methods -----------------------------------------------------------------------
@@ -72,5 +77,4 @@ public class StringRetrieverTest {
 
     // region helper classes -----------------------------------------------------------------------
     // endregion helper classes --------------------------------------------------------------------
-
 }

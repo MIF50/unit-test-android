@@ -16,17 +16,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -43,11 +38,14 @@ public class FetchCartItemsUseCaseTest {
     // endregion constants -------------------------------------------------------------------------
 
     // region helper fields ------------------------------------------------------------------------
-    @Mock GetCartItemsHttpEndpoint mGetCartItemsHttpEndpointMock;
-    @Mock FetchCartItemsUseCase.Listener mListenerMock1;
-    @Mock FetchCartItemsUseCase.Listener mListenerMock2;
-
-    @Captor ArgumentCaptor<List<CartItem>> mAcListCartItem;
+    @Mock
+    GetCartItemsHttpEndpoint mGetCartItemsHttpEndpointMock;
+    @Mock
+    FetchCartItemsUseCase.Listener mListenerMock1;
+    @Mock
+    FetchCartItemsUseCase.Listener mListenerMock2;
+    @Captor
+    ArgumentCaptor<List<CartItem>> mAcListCartItem;
     // endregion helper fields ---------------------------------------------------------------------
 
     FetchCartItemsUseCase SUT;
@@ -58,9 +56,8 @@ public class FetchCartItemsUseCaseTest {
         success();
     }
 
-
     @Test
-    public void fetchCartItems_correctLimitPassedToEndpoint() throws Exception {
+    public void fetchCartItems_shouldCorrectLimitPassedToEndpoint() throws Exception {
         // Arrange
         ArgumentCaptor<Integer> acInt = ArgumentCaptor.forClass(Integer.class);
         // Act
@@ -71,7 +68,7 @@ public class FetchCartItemsUseCaseTest {
     }
 
     @Test
-    public void fetchCartItems_success_observersNotifiedWithCorrectData() throws Exception {
+    public void fetchCartItems_whenSuccess_shouldNotifiedWithCorrectData() throws Exception {
         // Arrange
         // Act
         SUT.registerListener(mListenerMock1);
@@ -88,7 +85,7 @@ public class FetchCartItemsUseCaseTest {
     }
 
     @Test
-    public void fetchCartItems_success_unsubscribedObserversNotNotified() throws Exception {
+    public void fetchCartItems_whenSuccess_shouldUnsubscribedObserversNotNotified() throws Exception {
         // Arrange
         // Act
         SUT.registerListener(mListenerMock1);
@@ -101,7 +98,7 @@ public class FetchCartItemsUseCaseTest {
     }
 
     @Test
-    public void fetchCartItems_generalError_observersNotifiedOfFailure() throws Exception {
+    public void fetchCartItems_whenGeneralError_shouldObserversNotifiedOfFailure() throws Exception {
         // Arrange
         generaError();
         // Act
@@ -114,7 +111,7 @@ public class FetchCartItemsUseCaseTest {
     }
 
     @Test
-    public void fetchCartItems_networkError_observersNotifiedOfFailure() throws Exception {
+    public void fetchCartItems_whenNetworkError_shouldObserversNotifiedOfFailure() throws Exception {
         // Arrange
         networkError();
         // Act

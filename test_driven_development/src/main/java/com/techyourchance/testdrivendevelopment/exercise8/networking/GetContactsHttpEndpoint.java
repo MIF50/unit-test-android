@@ -18,5 +18,5 @@ public interface GetContactsHttpEndpoint {
      * @param filterTerm filter term to match in any of the contact fields
      * @param callback object to be notified when the request completes
      */
-    public void getContacts(String filterTerm, Callback callback);
+    void getContacts(String filterTerm, Callback callback);
 }
